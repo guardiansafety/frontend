@@ -1,0 +1,29 @@
+:root {
+  --header-height: 73px; /* Adjust this value to match the actual height of your header */
+}
+
+.dashboardContainer {
+  width: 100vw;
+  height: calc(100vh - var(--header-height)); /* Adjust the height to account for the header */
+  margin-top: var(--header-height); /* Push the dashboard down to avoid overlapping with the header */
+}
+
+.flyButton {
+  position: absolute;
+  top: 85px;
+  left: 15px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.flyButton:hover {
+  background-color: #f0f0f0;
+  color: #000;
+}

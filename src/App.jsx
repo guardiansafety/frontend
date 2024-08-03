@@ -4,6 +4,7 @@ import Navbar from './Navbar';
 import LandingPage from './landing_page/LandingPage';
 import ImageDescriber from './img_description/ImageDescriber';
 import Profile from './profile/Profile';
+import Dashboard from './dashboard/Dashboard';
 import GetStarted from './GetStarted';
 import { ThemeProvider } from './ColorTheme';
 import './App.css';
@@ -23,6 +24,8 @@ const AppContent = () => {
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/callback" element={<CallbackPage />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+
         </Routes>
       </div>
     </>
@@ -42,3 +45,11 @@ const App = () => {
 };
 
 export default App;
+
+// import Map from "./Map";
+
+// function App() {
+//   return <Map />;
+// }
+
+// export default App;

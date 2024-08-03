@@ -39,6 +39,7 @@ const Navbar = () => {
         <div className={styles.navLinksContainer}>
           <div className={styles.navLinks}>
             <CustomNavLink to="/">Home</CustomNavLink>
+            <CustomNavLink to="/dashboard">Dashboard</CustomNavLink>
             <CustomNavLink to="/describe">Describe</CustomNavLink>
             <CustomNavLink to="/profile">Profile</CustomNavLink>
           </div>
