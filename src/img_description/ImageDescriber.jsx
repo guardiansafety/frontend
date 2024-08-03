@@ -2,11 +2,10 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import axios from 'axios';
 import Webcam from 'react-webcam';
 import Modal from 'react-modal';
-import { FaCamera, FaUpload, FaExclamationTriangle } from 'react-icons/fa';
+import { FaCamera, FaUpload, FaExclamationTriangle, FaAmbulance, FaFireExtinguisher, FaFirstAid, FaPhoneVolume } from 'react-icons/fa';
 import { useAuth0 } from '@auth0/auth0-react';
 import LoadingSpinner from '../LoadingSpinner';
 import Notification from '../Notification';
-import { FaAmbulance, FaFireExtinguisher, FaFirstAid, FaPhoneVolume } from 'react-icons/fa';
 import styles from './ImageDescriber.module.css';
 
 Modal.setAppElement('#root');
@@ -88,11 +87,10 @@ const ImageDescriber = () => {
     setError('');
 
     try {
-      // Create a new emergency event
       const eventResponse = await axios.post(
         `http://localhost:3006/create-emergency-event/${user.nickname}`,
         {
-          location: JSON.stringify(location),
+          location,
           description: 'Emergency event',
           auth0Id: user.sub
         }
@@ -100,7 +98,6 @@ const ImageDescriber = () => {
 
       const { emergencyId } = eventResponse.data;
 
-      // Add images to the newly created emergency event
       const imageFormData = new FormData();
       files.forEach(file => {
         imageFormData.append('images', file);

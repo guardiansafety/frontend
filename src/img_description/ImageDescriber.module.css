@@ -31,14 +31,15 @@
   color: var(--highlight-color);
 }
 
-.icon1 { top: 15%; left: 10%; font-size: 7rem; }
-.icon2 { top: 20%; right: 10%; font-size: 4rem;}
-.icon3 { bottom: 15%; left: 10%; font-size: 8rem; }
-.icon4 { bottom: 10%; right: 20%; font-size: 10rem;}
+.icon1 { top: 15%; left: 10%; font-size: 100px; }
+.icon2 { top: 20%; right: 10%; font-size: 120px; }
+.icon3 { bottom: 15%; left: 10%; font-size: 80px; }
+.icon4 { bottom: 10%; right: 20%; font-size: 60px; }
 
 .heading {
   color: var(--highlight-color);
   margin-bottom: 20px;
+  z-index: 1;
 }
 
 .headingIcon {
@@ -47,6 +48,7 @@
 
 .form {
   margin-bottom: 20px;
+  z-index: 1;
 }
 
 .input {
@@ -57,6 +59,7 @@
   display: flex;
   justify-content: center;
   gap: 10px;
+  z-index: 1;
 }
 
 .button {
@@ -72,6 +75,7 @@
   align-items: center;
   transition: var(--transition);
   box-shadow: var(--button-shadow);
+  z-index: 1;
 }
 
 .button:hover {
@@ -90,6 +94,7 @@
   margin-top: 20px;
   max-width: 600px;
   width: 100%;
+  z-index: 1;
 }
 
 .description h2, .error h2 {
@@ -104,6 +109,7 @@
   max-width: 500px;
   width: 100%;
   color: var(--text);
+  z-index: 1;
 }
 
 .overlay {
@@ -118,7 +124,7 @@
   align-items: center;
   color: var(--text);
   padding-top: 80px;
-
+  z-index: 1;
 }
 
 .webcam {
@@ -131,13 +137,14 @@
   color: var(--text);
   max-height: 70vh;
   padding: 20px;
-
   box-sizing: border-box;
   overflow: auto;
+  z-index: 1;
 }
 
 .uploadedImage {
   max-width: 100%;
   height: auto;
   margin: 10px 0;
+  z-index: 1;
 }
