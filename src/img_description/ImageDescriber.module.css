@@ -1,46 +1,52 @@
 .container {
+  position: relative;
+  text-align: center;
+  background: var(--background);
+  min-height: 100vh;
+  width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  width: 100vw;
-  background: var(--background);
-  color: var(--text);
   font-family: 'Poppins', sans-serif;
-  text-align: center;
-  padding: 40px 20px;
+  color: var(--text);
+  padding: 20px;
   box-sizing: border-box;
-  position: relative;
   overflow: hidden;
-
 }
 
-.heading {
-  font-size: 3rem;
-  margin-bottom: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--primary-color);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-  transition: var(--transition);
+.iconsBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
 }
 
-.heading:hover {
-  transform: scale(1.05);
-}
-
-.headingIcon {
-  margin-right: 15px;
-  font-size: 2.5rem;
+.icon {
+  position: absolute;
+  opacity: 0.1;
   color: var(--highlight-color);
 }
 
+.icon1 { top: 15%; left: 10%; font-size: 7rem; }
+.icon2 { top: 20%; right: 10%; font-size: 4rem;}
+.icon3 { bottom: 15%; left: 10%; font-size: 8rem; }
+.icon4 { bottom: 10%; right: 20%; font-size: 10rem;}
+
+.heading {
+  color: var(--highlight-color);
+  margin-bottom: 20px;
+}
+
+.headingIcon {
+  margin-right: 10px;
+}
+
 .form {
-  margin-bottom: 40px;
-  width: 100%;
-  max-width: 600px;
+  margin-bottom: 20px;
 }
 
 .input {
@@ -50,124 +56,88 @@
 .buttonsContainer {
   display: flex;
   justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .button {
-  padding: 15px 30px;
-  font-size: 1.2rem;
-  cursor: pointer;
   background: var(--button-gradient);
   color: var(--text);
   border: none;
-  border-radius: 50px;
-  transition: var(--transition);
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: var(--button-shadow);
-  position: relative;
-  overflow: hidden;
-}
-
-.button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
   transition: var(--transition);
-}
-
-.button:hover::before {
-  left: 100%;
+  box-shadow: var(--button-shadow);
 }
 
 .button:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
 .buttonIcon {
   margin-right: 10px;
-  font-size: 1.4rem;
 }
 
 .description, .error {
-  margin-top: 30px;
-  font-size: 1.2rem;
-  max-width: 800px;
   background: var(--secondary-bg);
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  transition: var(--transition);
-}
-
-.description:hover, .error:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-}
-
-.error {
-  color: var(--highlight-color);
-}
-
-.webcam {
+  padding: 20px;
+  border-radius: 5px;
+  margin-top: 20px;
+  max-width: 600px;
   width: 100%;
-  max-width: 500px;
-  border: 3px solid var(--highlight-color);
-  border-radius: 15px;
-  margin-bottom: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  transition: var(--transition);
 }
 
-.webcam:hover {
-  transform: scale(1.02);
+.description h2, .error h2 {
+  color: var(--highlight-color);
+  margin-bottom: 10px;
 }
 
 .modal {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: var(--secondary-bg);
-  padding: 40px;
-  border-radius: 20px;
-  outline: none;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  background: var(--background);
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 500px;
+  width: 100%;
+  color: var(--text);
 }
 
 .overlay {
-  background-color: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1000;
-  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text);
+  padding-top: 80px;
+
 }
 
-@media (max-width: 768px) {
-  .heading {
-    font-size: 2.5rem;
-  }
-  
-  .button {
-    padding: 12px 25px;
-    font-size: 1rem;
-  }
+.webcam {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.modalContent {
+  text-align: left;
+  color: var(--text);
+  max-height: 70vh;
+  padding: 20px;
+
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.uploadedImage {
+  max-width: 100%;
+  height: auto;
+  margin: 10px 0;
 }

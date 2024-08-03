@@ -12,9 +12,9 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (isAuthenticated && user?.sub) {
+      if (isAuthenticated && user?.nickname) {
         try {
-          const response = await fetch(`http://localhost:3006/profile?userId=${user.sub}`);
+          const response = await fetch(`http://localhost:3006/profile?username=${user.nickname}`);
           if (response.ok) {
             const data = await response.json();
             setUsername(data.username);
