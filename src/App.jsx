@@ -1,35 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { Auth0ProviderWithNavigate, AuthPage, CallbackPage } from './Auth';
+import Navbar from './Navbar';
+import LandingPage from './landing_page/LandingPage';
+import ImageDescriber from './img_description/ImageDescriber';
+import Profile from './profile/Profile';
+import GetStarted from './GetStarted';
+import { ThemeProvider } from './ColorTheme';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+const AppContent = () => {
+  const location = useLocation();
+  const showNavbar = !['/', '/auth', '/callback'].includes(location.pathname);
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      {showNavbar && <Navbar />}
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/describe" element={<ImageDescriber />} />
+          <Route path="/get-started" element={<GetStarted />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/callback" element={<CallbackPage />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
-}
+  );
+};
 
-export default App
+const App = () => {
+  return (
+    <Router>
+      <Auth0ProviderWithNavigate>
+        <ThemeProvider>
+          <AppContent />
+        </ThemeProvider>
+      </Auth0ProviderWithNavigate>
+    </Router>
+  );
+};
+
+export default App;

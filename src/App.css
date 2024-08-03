@@ -1,42 +1,97 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+.App {
   text-align: center;
+  background: var(--background);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  color: var(--text);
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Setting our color scheme */
+:root {
+  --background: #f0f4f8;
+  --secondary-bg: #f8f9fa;
+  --input-bg: #dbdbdb;
+
+  --text: #333;
+  --primary-color: #007bff;
+  --secondary-color: #0056b3;
+  --highlight-color: #fd8b2d;
+  --secondary-highlight-color: #e67e22;
+  --shadow-color: black;
+  --button-gradient: linear-gradient(45deg, #fff, #7a340e);
+  --button-shadow: 0 4px 6px rgba(70, 47, 31, 0.1);
+
+
+
+  --navbar-bg: rgba(255, 255, 255, 0.9);
+
+
+  --landing-bg-primary: rgba(44, 44, 44, 0.8); /* Dark grey opacity 80% */
+  --landing-bg-secondary: #000000; /* Very dark grey */
+  --landing-bg-tertiary: #333333; /* Dark grey */
+  --landing-accent-primary: #ff5722; /* Deep orange */
+  --landing-accent-secondary: #ff8a50; /* Lighter orange */
+  --landing-text-primary: #ffffff; /* White */
+  --landing-text-secondary: #cccccc; /* Light grey */
+
+
+  --transition: all 0.3s ease;
+
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+[data-theme='dark'] {
+  --background: #1d1b1b;
+  --secondary-bg: #292929;
+  --input-bg: #333333;
+  --text: #e0e0e0;
+  --primary-color: #007bff;
+  --secondary-color: #0056b3;
+  --highlight-color: #fd8b2d;
+  --secondary-highlight-color: #e67e22;
+  --shadow-color: rgb(135, 135, 135);
+
+  --button-gradient: linear-gradient(45deg, #94873f, #402916);
+  --button-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  --landing-bg-primary: rgba(44, 44, 44, 0.8); /* Dark grey opacity 80% */
+  --landing-bg-secondary: #000000; /* Very dark grey */
+  --landing-bg-tertiary: #333333; /* Dark grey */
+  --landing-accent-primary: #ff5722; /* Deep orange */
+  --landing-accent-secondary: #ff8a50; /* Lighter orange */
+  --landing-text-primary: #ffffff; /* White */
+  --landing-text-secondary: #cccccc; /* Light grey */
+
+  --navbar-bg: rgba(31, 41, 55, 0.9);
+
+  --transition: all 0.3s ease;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Scrollbar styling for ALL scrollbars */
+::-webkit-scrollbar {
+  width: 6px; /* for Chrome, Safari, and Opera */
+  height: 4px;
 }
 
-.card {
-  padding: 2em;
+::-webkit-scrollbar-track {
+  background-color: #00000082; /* for Chrome, Safari, and Opera */
 }
 
-.read-the-docs {
-  color: #888;
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* for Chrome, Safari, and Opera */
+  border-radius: 10px; /* for Chrome, Safari, and Opera */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* for Chrome, Safari, and Opera */
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }
