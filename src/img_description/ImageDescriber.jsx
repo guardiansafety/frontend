@@ -87,6 +87,8 @@ const ImageDescriber = () => {
     setError('');
 
     try {
+      alert(`http://localhost:3006/create-emergency-event/${user.nickname}`);
+
       const eventResponse = await axios.post(
         `http://localhost:3006/create-emergency-event/${user.nickname}`,
         {
