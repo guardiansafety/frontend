@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
 .container {
   position: relative;
   text-align: center;
@@ -10,7 +12,7 @@
   align-items: center;
   font-family: 'Poppins', sans-serif;
   color: var(--text);
-  padding: 20px;
+  padding: 40px 20px;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -29,26 +31,53 @@
   position: absolute;
   opacity: 0.1;
   color: var(--highlight-color);
+  animation: throb 2s infinite;
 }
 
-.icon1 { top: 15%; left: 10%; font-size: 100px; }
-.icon2 { top: 20%; right: 10%; font-size: 120px; }
-.icon3 { bottom: 15%; left: 10%; font-size: 80px; }
-.icon4 { bottom: 10%; right: 20%; font-size: 60px; }
+@keyframes throb {
+  0%, 100% {
+    transform: scale(1);
+    color: var(--highlight-color);
+  }
+  50% {
+    transform: scale(1.1);
+    color: red;
+  }
+}
+
+.icon1 { top: 10%; left: 5%; font-size: 120px; }
+.icon2 { top: 15%; right: 5%; font-size: 140px; }
+.icon3 { bottom: 10%; left: 5%; font-size: 100px; }
+.icon4 { bottom: 5%; right: 10%; font-size: 80px; }
 
 .heading {
+  font-family: 'Poppins', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
   color: var(--highlight-color);
   margin-bottom: 20px;
   z-index: 1;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .headingIcon {
   margin-right: 10px;
+  font-size: 3.5rem;
+  animation: throb 2s infinite;
+  position: relative;
+  top: 5px;
 }
 
 .form {
   margin-bottom: 20px;
   z-index: 1;
+  width: 100%;
+  max-width: 600px;
 }
 
 .input {
@@ -60,6 +89,7 @@
   justify-content: center;
   gap: 10px;
   z-index: 1;
+  flex-wrap: wrap;
 }
 
 .button {
@@ -69,13 +99,14 @@
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
   display: flex;
   align-items: center;
   transition: var(--transition);
   box-shadow: var(--button-shadow);
   z-index: 1;
+  margin: 5px;
 }
 
 .button:hover {
@@ -87,7 +118,7 @@
   margin-right: 10px;
 }
 
-.description, .error {
+.error {
   background: var(--secondary-bg);
   padding: 20px;
   border-radius: 5px;
@@ -95,10 +126,11 @@
   max-width: 600px;
   width: 100%;
   z-index: 1;
+  color: var(--error-color);
 }
 
-.description h2, .error h2 {
-  color: var(--highlight-color);
+.error h2 {
+  color: var(--error-color);
   margin-bottom: 10px;
 }
 
@@ -107,9 +139,10 @@
   padding: 20px;
   border-radius: 5px;
   max-width: 500px;
-  width: 100%;
+  width: 90%;
   color: var(--text);
   z-index: 1;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .overlay {
@@ -130,6 +163,7 @@
 .webcam {
   width: 100%;
   margin-bottom: 20px;
+  border-radius: 10px;
 }
 
 .modalContent {
@@ -146,5 +180,6 @@
   max-width: 100%;
   height: auto;
   margin: 10px 0;
+  border-radius: 5px;
   z-index: 1;
 }
