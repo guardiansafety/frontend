@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import axios from 'axios';
 import Webcam from 'react-webcam';
 import Modal from 'react-modal';
-import { FaCamera, FaUpload, FaExclamationTriangle, FaAmbulance, FaFireExtinguisher, FaFirstAid, FaPhoneVolume } from 'react-icons/fa';
+import { FaCamera, FaUpload, FaAmbulance, FaFireExtinguisher, FaFirstAid, FaPhoneVolume } from 'react-icons/fa';
 import { useAuth0 } from '@auth0/auth0-react';
 import LoadingSpinner from '../LoadingSpinner';
 import Notification from '../Notification';
@@ -132,7 +132,7 @@ const ImageDescriber = () => {
         <FaPhoneVolume className={`${styles.icon} ${styles.icon4}`} />
       </div>
       <h1 className={styles.heading}>
-        <FaExclamationTriangle className={styles.headingIcon} /> Record Emergency
+        Record Emergency
       </h1>
       <div className={styles.form}>
         <input
