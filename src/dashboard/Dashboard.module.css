@@ -1,44 +1,11 @@
 :root {
-  --header-height: 73px; /* Adjust this value to match the actual height of your header */
+  --header-height: 73px;
 }
 
 .dashboardContainer {
   width: 100vw;
-  height: calc(100vh - var(--header-height)); /* Adjust the height to account for the header */
-  margin-top: var(--header-height); /* Push the dashboard down to avoid overlapping with the header */
-}
-
-.buttonContainer {
-  position: absolute;
-  top: 85px;
-  left: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px; /* Space between buttons */
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-
-
-.flyButton {
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 10px 20px;
-  font-size: 16px;
-  color: #333;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.flyButton:hover {
-  background-color: #f0f0f0;
-  color: #000;
+  height: calc(100vh - var(--header-height));
+  margin-top: var(--header-height);
 }
 
 .scaleInput {
@@ -71,3 +38,93 @@
 .applyButton:hover {
   background-color: #0056b3;
 }
+
+/* New styles for the FriendsPanel */
+.friendsPanel {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  width: 16rem;
+}
+
+.friendsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.friendCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.friendCard:hover {
+  background-color: #e5e7eb;
+}
+
+.friendImage {
+  width: 4rem;
+  height: 4rem;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+}
+
+.friendName {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.closeButton:hover {
+  color: #374151;
+}
+
+.toggleButton {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  background-color: white;
+  border-radius: 50%;
+  padding: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.heatMapToggle {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background-color: var(--heatmap-toggle-bg);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+}
+
+.heatMapToggle:hover {
+  background-color: #f0f0f0;
+}
+

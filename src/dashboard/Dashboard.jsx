@@ -2,6 +2,8 @@ import { useEffect, useRef, useContext, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { Threebox } from 'threebox-plugin';
 import { ThemeContext } from '../ColorTheme';
+import FriendsPanel from './FriendsPanel';
+import FriendDetails from './FriendDetails';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import styles from './Dashboard.module.css';
 
@@ -11,6 +13,8 @@ const Map = () => {
   const { mapStyle } = useContext(ThemeContext);
   const zoomLevel = 15.4;
   const [showHeatMap, setShowHeatMap] = useState(false);
+  const [showFriendsPanel, setShowFriendsPanel] = useState(false);
+  const [selectedFriend, setSelectedFriend] = useState(null);
 
   useEffect(() => {
     mapboxgl.accessToken = 'pk.eyJ1IjoiYnJpYW4temhhbmciLCJhIjoiY2x6YmdhbGxzMDBleTJqcHkycTF4ZTU1aiJ9.ESxJl1cwwl3PC_AoDvFWrg';
@@ -18,7 +22,7 @@ const Map = () => {
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: mapStyle,
-      center: [-79.39665, 43.6598], // Initial center coordinates
+      center: [-79.39665, 43.6598],
       zoom: zoomLevel,
       pitch: 64.9,
       bearing: 172.5,
@@ -85,6 +89,8 @@ const Map = () => {
             loadedModel.setRotation({ x: 0, y: 0, z: 241 });
             window.tb.add(loadedModel);
             loadedModel.playDefault({ duration: 20000000 });
+
+            
           });
         },
         render: function () {
@@ -132,13 +138,11 @@ const Map = () => {
   };
 
   const addHeatMapLayer = () => {
-    // Add a new source for the heat map data
     mapRef.current.addSource('heatmap-data', {
       type: 'geojson',
-      data: './crime_rates.geojson' // Replace with your GeoJSON data source
+      data: './crime_rates.geojson'
     });
 
-    // Add a new layer for the heat map
     mapRef.current.addLayer({
       id: 'heatmap-layer',
       type: 'heatmap',
@@ -181,7 +185,6 @@ const Map = () => {
       }
     }, 'add-3d-buildings');
 
-    // Set initial visibility based on showHeatMap state
     mapRef.current.setLayoutProperty(
       'heatmap-layer',
       'visibility',
@@ -196,38 +199,48 @@ const Map = () => {
       zoom: 18,
       pitch: 64.9,
       bearing: 172.5,
-      speed: 1,
-      curve: 1
+      speed: 1.3,
+      curve: 1.5
     });
+    setShowFriendsPanel(false);
   };
 
   const toggleHeatMap = () => {
     setShowHeatMap(!showHeatMap);
   };
 
+  const toggleFriendsPanel = () => {
+    setShowFriendsPanel(!showFriendsPanel);
+  };
+
+  const handleFriendClick = (friend) => {
+    flyToModel(friend.coordinates);
+    setSelectedFriend(friend);
+    setShowFriendsPanel(false);
+  };
+
+  const closeFriendDetails = () => {
+    setSelectedFriend(null);
+  };
+
   return (
     <div>
       <div id="map" ref={mapContainerRef} className={styles.dashboardContainer}></div>
-      <div className={styles.buttonContainer}>
-        <button onClick={() => flyToModel([-79.39665, 43.6598])} className={styles.flyButton}>
-          Fly to Snoopy
-        </button>
-        <button onClick={() => flyToModel([-79.4044, 43.6667])} className={styles.flyButton}>
-          Fly to BMO
-        </button>
-        <button onClick={() => flyToModel([-79.39825, 43.65835])} className={styles.flyButton}>
-          Fly to Pikachu
-        </button>
-        <button onClick={() => flyToModel([-122.4786, 37.8199])} className={styles.flyButton}>
-          Fly to Minion
-        </button>
-        <button onClick={() => flyToModel([116.3897, 39.9048])} className={styles.flyButton}>
-          Fly to Stitch
-        </button>
-        <button onClick={toggleHeatMap} className={styles.flyButton}>
-          {showHeatMap ? 'Hide Heat Map' : 'Show Heat Map'}
-        </button>
-      </div>
+      <FriendsPanel
+        isOpen={showFriendsPanel}
+        onClose={toggleFriendsPanel}
+        onFriendClick={handleFriendClick}
+      />
+      <FriendDetails
+        friend={selectedFriend}
+        onClose={closeFriendDetails}
+      />
+      <button
+        onClick={toggleHeatMap}
+        className={styles.heatMapToggle}
+      >
+        {showHeatMap ? 'Hide Heat Map' : 'Show Heat Map'}
+      </button>
     </div>
   );
 };

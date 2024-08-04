@@ -22,6 +22,7 @@
     "dotenv": "^16.4.5",
     "install": "^0.13.0",
     "leaflet": "^1.9.4",
+    "lucide-react": "^0.424.0",
     "mapbox-gl": "^3.5.2",
     "moment-timezone": "^0.5.45",
     "npm": "^10.8.2",

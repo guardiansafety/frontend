@@ -40,6 +40,13 @@
   --landing-text-primary: #ffffff; /* White */
   --landing-text-secondary: #cccccc; /* Light grey */
 
+  --friend-toggle-bg: #ffffff;
+  --friend-button-bg: #e8e8e8;
+  --friend-card-bg: #ffffff;
+  --heatmap-toggle-bg: #ffffff;
+  --friend-button-hover: #cdcdcd;
+
+  --friend-details-bg: rgba(255, 255, 255, 0.8);
 
   --transition: all 0.3s ease;
 
@@ -66,6 +73,16 @@
   --landing-accent-secondary: #ff8a50; /* Lighter orange */
   --landing-text-primary: #ffffff; /* White */
   --landing-text-secondary: #cccccc; /* Light grey */
+
+  --friend-toggle-bg: #1F2835;
+  --friend-button-bg: #263447;
+  --friend-button-hover: #2f3e54;
+  --friend-card-bg: rgb(31, 40, 53);
+  --heatmap-toggle-bg: #1F2835;
+
+  --friend-details-bg: rgba(31, 40, 53, 0.8);
+
+
 
   --navbar-bg: rgba(31, 41, 55, 0.9);
 
