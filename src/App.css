@@ -47,6 +47,9 @@
   --friend-button-hover: #cdcdcd;
 
   --friend-details-bg: rgba(255, 255, 255, 0.8);
+  --popup-bg-color: rgba(255, 255, 255, 0.8);
+  --marker-border-color: #e8e8e8;
+
 
   --transition: all 0.3s ease;
 
@@ -81,7 +84,8 @@
   --heatmap-toggle-bg: #1F2835;
 
   --friend-details-bg: rgba(31, 40, 53, 0.8);
-
+  --popup-bg-color: rgba(31, 40, 53, 0.8);
+  --marker-border-color: #1F2835;
 
 
   --navbar-bg: rgba(31, 41, 55, 0.9);

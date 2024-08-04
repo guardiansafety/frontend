@@ -17,6 +17,7 @@
   border-radius: 1rem;
   text-align: center;
   position: relative;
+  transform: translateX(17vw); /* Adjust the value as needed */
 }
 
 .closeButton {

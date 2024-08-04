@@ -7,6 +7,74 @@ import FriendDetails from './FriendDetails';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import styles from './Dashboard.module.css';
 
+const markerData = [
+  // Snoopy markers
+  {
+    friendName: 'Snoopy',
+    friendImage: '/snoopy.jpg',
+    location: [-79.39675, 43.6600],
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  },
+  {
+    friendName: 'Snoopy',
+    friendImage: '/snoopy.jpg',
+    location: [-79.39655, 43.6596],
+    description: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+  },
+  // Pikachu markers
+  {
+    friendName: 'Pikachu',
+    friendImage: '/pikachu.jpg',
+    location: [-79.39835, 43.65845],
+    description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.'
+  },
+  {
+    friendName: 'Pikachu',
+    friendImage: '/pikachu.jpg',
+    location: [-79.39815, 43.65825],
+    description: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.'
+  },
+  // BMO markers
+  {
+    friendName: 'BMO',
+    friendImage: '/bmo.jpg',
+    location: [-79.4046, 43.6669],
+    description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.'
+  },
+  {
+    friendName: 'BMO',
+    friendImage: '/bmo.jpg',
+    location: [-79.4042, 43.6665],
+    description: 'Deserunt mollit anim id est laborum.'
+  },
+  // Minion markers
+  {
+    friendName: 'Minion',
+    friendImage: '/minion.jpg',
+    location: [-122.4788, 37.8201],
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.'
+  },
+  {
+    friendName: 'Minion',
+    friendImage: '/minion.jpg',
+    location: [-122.4784, 37.8197],
+    description: 'Incididunt ut labore et dolore magna aliqua.'
+  },
+  // Stitch markers
+  {
+    friendName: 'Stitch',
+    friendImage: '/stitch.jpg',
+    location: [116.3899, 39.9050],
+    description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.'
+  },
+  {
+    friendName: 'Stitch',
+    friendImage: '/stitch.jpg',
+    location: [116.3895, 39.9046],
+    description: 'Ex ea commodo consequat. Duis aute irure dolor in reprehenderit.'
+  }
+];
+
 const Map = () => {
   const mapContainerRef = useRef();
   const mapRef = useRef();
@@ -29,9 +97,10 @@ const Map = () => {
       antialias: true
     });
 
-    mapRef.current.on('style.load', () => {
+    mapRef.current.on('load', () => {
       addCustomLayers();
       addHeatMapLayer();
+      addMarkers();
     });
 
     return () => mapRef.current.remove();
@@ -89,8 +158,6 @@ const Map = () => {
             loadedModel.setRotation({ x: 0, y: 0, z: 241 });
             window.tb.add(loadedModel);
             loadedModel.playDefault({ duration: 20000000 });
-
-            
           });
         },
         render: function () {
@@ -192,9 +259,36 @@ const Map = () => {
     );
   };
 
-  const flyToModel = (coordinates) => {
+  const addMarkers = () => {
+    markerData.forEach((marker) => {
+      const el = document.createElement('div');
+      el.className = 'marker';
+      el.style.backgroundImage = `url(${marker.friendImage})`;
+      el.style.width = '50px';
+      el.style.height = '50px';
+      el.style.backgroundSize = '100%';
+      el.style.borderRadius = '50%';
+      el.style.border = '2px solid var(--marker-border-color)'; // Add this line to set the border
+
+
+      const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
+    `<h3 style="color: black; margin-bottom: 4px; font-weight: bold;">${marker.friendName}</h3><p style="color: black;">${marker.description}</p>`
+  );
+      new mapboxgl.Marker(el)
+        .setLngLat(marker.location)
+        .setPopup(popup)
+        .addTo(mapRef.current);
+    });
+  };
+
+  const flyToModel = (friend) => {
+    setShowFriendsPanel(false);
+    const offsetCoordinates = [
+      friend.coordinates[0] - 0.0008, // Adjust this value to set how much east you want to move
+      friend.coordinates[1] - 0.0008 // Adjust this value to set how much north you want to move
+    ];
     mapRef.current.flyTo({
-      center: coordinates,
+      center: offsetCoordinates,
       essential: true,
       zoom: 18,
       pitch: 64.9,
@@ -202,7 +296,9 @@ const Map = () => {
       speed: 1.3,
       curve: 1.5
     });
-    setShowFriendsPanel(false);
+    mapRef.current.once('moveend', () => {
+      setSelectedFriend(friend);
+    });
   };
 
   const toggleHeatMap = () => {
@@ -214,9 +310,7 @@ const Map = () => {
   };
 
   const handleFriendClick = (friend) => {
-    flyToModel(friend.coordinates);
-    setSelectedFriend(friend);
-    setShowFriendsPanel(false);
+    flyToModel(friend);
   };
 
   const closeFriendDetails = () => {
