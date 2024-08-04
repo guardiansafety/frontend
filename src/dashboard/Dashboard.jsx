@@ -225,7 +225,7 @@ const Map = () => {
         el.style.border = '2px solid var(--marker-border-color)';
   
         const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
-          `<div style="padding: 10px; border-radius: 10px; background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+          `<div style="padding: 10px; border-radius: 10px; background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: auto; max-height: 200px;">
              <div style="margin-bottom: 10px; padding: 10px; border-radius: 10px; background-color: #f0f0f0;">
                <h3 style="color: black; margin: 0; font-weight: bold;">Username: ${marker.friendName}</h3>
              </div>
