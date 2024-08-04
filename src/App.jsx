@@ -7,6 +7,7 @@ import Profile from './profile/Profile';
 import Dashboard from './dashboard/Dashboard';
 import GetStarted from './GetStarted';
 import { ThemeProvider } from './ColorTheme';
+import EmergencyMap from './MapTestDaniel';
 import './App.css';
 
 const AppContent = () => {
@@ -25,7 +26,7 @@ const AppContent = () => {
           <Route path="/callback" element={<CallbackPage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/dashboard" element={<Dashboard />} />
-
+          <Route path="/mapTest" element={<EmergencyMap />} />
         </Routes>
       </div>
     </>
