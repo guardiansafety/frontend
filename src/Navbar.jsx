@@ -42,6 +42,7 @@ const Navbar = () => {
             <CustomNavLink to="/dashboard">Dashboard</CustomNavLink>
             <CustomNavLink to="/describe">Describe</CustomNavLink>
             <CustomNavLink to="/profile">Profile</CustomNavLink>
+            <CustomNavLink to="/mapTest">Map</CustomNavLink>
           </div>
         </div>
         <div className={styles.authButtonContainer}>
