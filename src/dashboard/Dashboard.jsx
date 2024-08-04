@@ -82,7 +82,7 @@ const Map = () => {
   const mapContainerRef = useRef();
   const mapRef = useRef();
   const { mapStyle } = useContext(ThemeContext);
-  const zoomLevel = 15.4;
+  const zoomLevel = 17.4;
   const [showHeatMap, setShowHeatMap] = useState(false);
   const [showFriendsPanel, setShowFriendsPanel] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState(null);
