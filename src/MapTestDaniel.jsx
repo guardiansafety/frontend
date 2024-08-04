@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
@@ -27,9 +27,10 @@ const EmergencyMap = () => {
 
   const fetchEmergencies = async () => {
     try {
+      
       const response = await axios.get('http://localhost:3006/get-all-emergencies');
       setEmergencies(response.data);
-      alert(JSON.stringify(response.data, null, 2)); // Debugging alert
+      console.log(response.data); // Use console.log for debugging
     } catch (error) {
       console.error('Error fetching emergencies:', error);
       alert(`Error: ${error.message}`); // Show the error message
