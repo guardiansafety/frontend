@@ -62,14 +62,15 @@
   padding: 2rem 0; /* Added padding to ensure enough space */
 }
 
+/* Ensure the title class is correctly defined */
 .title {
-  font-size: 3rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+  font-size: 6rem;
+  font-weight: 800;
+  margin-bottom: 40px;
+  line-height: auto;
   margin-top: 4rem;
-  color: #ff8000; /* Cool orange color */
-  overflow: visible; /* Ensure overflow is visible */
-  white-space: nowrap; /* Prevent text wrapping */
+  color: #ff8000; /* Ensure this color is set */
+  overflow: visible;
 }
 
 .subtitle {

@@ -1,10 +1,10 @@
-import { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSpring, animated, config, useTrail } from '@react-spring/web';
+import { useSpring, animated } from '@react-spring/web';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShieldAlt, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { useAuth0 } from '@auth0/auth0-react';
-import styles from './Title.module.css';
+import styles from './Title.module.css'; // Ensure the CSS file is imported
 
 const TitleSection = () => {
   const { isAuthenticated } = useAuth0();
@@ -12,16 +12,10 @@ const TitleSection = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLaunching, setIsLaunching] = useState(false);
 
-  const [titleItems] = useState(() => [
-    { text: 'Welcome to Safety First', className: styles.title },
-    { text: 'Your Safety, Our Priority', className: styles.subtitle }
-  ]);
-
-  const trail = useTrail(titleItems.length, {
-    from: { opacity: 0, transform: 'translate3d(0,-40px,0)' },
-    to: { opacity: 1, transform: 'translate3d(0,0px,0)' },
-    config: { mass: 5, tension: 2000, friction: 200 },
-  });
+  const titleItems = [
+    { text: 'Guardian', className: styles.title }, // Ensure the className is correct
+    { text: 'A wearable AI for SOS', className: styles.subtitle }
+  ];
 
   const buttonProps = useSpring({
     scale: isHovered ? 1.1 : 1,
@@ -60,7 +54,7 @@ const TitleSection = () => {
         } else {
           navigate('/auth');
         }
-      }, 1000); // Increased delay to 1000ms (1 second) for a more noticeable effect
+      }, 1000);
       return () => clearTimeout(timer);
     }
   }, [isLaunching, isAuthenticated, navigate]);
@@ -79,10 +73,8 @@ const TitleSection = () => {
       </div>
 
       <div className={styles.header}>
-        {trail.map((props, index) => (
-          <animated.div key={index} style={props}>
-            <div className={titleItems[index].className}>{titleItems[index].text}</div>
-          </animated.div>
+        {titleItems.map((item, index) => (
+          <div key={index} className={item.className}>{item.text}</div>
         ))}
       </div>
 

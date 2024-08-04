@@ -17,11 +17,9 @@
 
 .content h2 {
   font-size: 2.5rem;
+  font-weight: 800;
   margin-bottom: 2rem;
-  background: linear-gradient(45deg, var(--landing-accent-primary), var(--landing-accent-secondary));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--landing-accent-primary);
 }
 
 .content p {

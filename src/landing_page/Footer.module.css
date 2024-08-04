@@ -2,6 +2,7 @@
   background-color: var(--landing-bg-secondary);
   color: var(--landing-text-secondary);
   padding: 3rem 0 1rem;
+  animation: fadeIn 1s ease-in-out;
 }
 
 .footerContent {
@@ -17,6 +18,12 @@
   flex: 1;
   min-width: 200px;
   margin-bottom: 2rem;
+  transition: transform 0.3s ease;
+  text-align: center; /* Center text and icons within their section */
+}
+
+.footerSection:hover {
+  transform: translateY(-5px);
 }
 
 .footerSection h3 {
@@ -43,26 +50,29 @@
 .footerSection a {
   color: var(--landing-text-secondary);
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .footerSection a:hover {
   color: var(--landing-accent-secondary);
+  transform: scale(1.05);
 }
 
 .socialIcons {
   display: flex;
+  justify-content: center; /* Center icons within the flex container */
   gap: 1rem;
 }
 
 .socialIcons a {
   font-size: 1.5rem;
   color: var(--landing-text-secondary);
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .socialIcons a:hover {
   color: var(--landing-accent-secondary);
+  transform: scale(1.1);
 }
 
 .footerBottom {
@@ -81,5 +91,14 @@
   .footerSection {
     width: 100%;
     text-align: center;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

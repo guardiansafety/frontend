@@ -1,22 +1,36 @@
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import Notification from '../Notification';
 import styles from './Footer.module.css';
 
 const Footer = () => {
+  const [notification, setNotification] = useState(null);
+
+  const showNotification = (message) => {
+    setNotification(message);
+    setTimeout(() => setNotification(null), 3000);
+  };
+
+  const handleLinkClick = (e) => {
+    e.preventDefault();
+    showNotification('Currently unconfigured :)');
+  };
+
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContent}>
         <div className={styles.footerSection}>
-          <h3>Safety First</h3>
+          <h3>Guardian</h3>
           <p>Empowering individuals with innovative personal safety solutions.</p>
         </div>
         <div className={styles.footerSection}>
           <h4>Quick Links</h4>
           <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#how-it-works">How It Works</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#home" onClick={handleLinkClick}>Home</a></li>
+            <li><a href="#features" onClick={handleLinkClick}>Features</a></li>
+            <li><a href="#how-it-works" onClick={handleLinkClick}>How It Works</a></li>
+            <li><a href="#contact" onClick={handleLinkClick}>Contact</a></li>
           </ul>
         </div>
         <div className={styles.footerSection}>
@@ -28,16 +42,19 @@ const Footer = () => {
         <div className={styles.footerSection}>
           <h4>Follow Us</h4>
           <div className={styles.socialIcons}>
-            <a href="#"><FontAwesomeIcon icon={faFacebook} /></a>
-            <a href="#"><FontAwesomeIcon icon={faTwitter} /></a>
-            <a href="#"><FontAwesomeIcon icon={faInstagram} /></a>
-            <a href="#"><FontAwesomeIcon icon={faLinkedin} /></a>
+            <a href="#" onClick={handleLinkClick}><FontAwesomeIcon icon={faFacebook} /></a>
+            <a href="#" onClick={handleLinkClick}><FontAwesomeIcon icon={faTwitter} /></a>
+            <a href="#" onClick={handleLinkClick}><FontAwesomeIcon icon={faInstagram} /></a>
+            <a href="#" onClick={handleLinkClick}><FontAwesomeIcon icon={faLinkedin} /></a>
           </div>
         </div>
       </div>
       <div className={styles.footerBottom}>
-        <p>&copy; 2024 Safety First. All rights reserved.</p>
+        <p>&copy; 2024 Guardian. All rights reserved.</p>
       </div>
+      {notification && (
+        <Notification message={notification} type="info" onClose={() => setNotification(null)} />
+      )}
     </footer>
   );
 };

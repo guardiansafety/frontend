@@ -79,10 +79,10 @@ const FeaturesSection = () => {
     <section className={styles.featuresSection}>
       <div className={styles.backgroundAnimation}></div>
       <animated.div style={headingProps} className={styles.headingContainer}>
-        <h2>How Safety First Works</h2>
+        <h2>How Guardian Works</h2>
         <p className={styles.sectionDescription}>
           Experience the future of personal safety with our cutting-edge technology. 
-          Discover how Safety First's innovative system keeps you protected:
+          Discover how Guardian's innovative system keeps you protected:
         </p>
       </animated.div>
       <div className={styles.stepsGrid}>

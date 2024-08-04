@@ -95,9 +95,9 @@ const BackgroundInfoSection = () => {
   return (
     <section className={styles.backgroundInfoSection}>
       <animated.div style={contentProps} className={styles.content}>
-        <h2>Why Safety First Matters</h2>
+        <h2>Why Guardian Matters</h2>
         <p>
-          In today's world, personal safety is crucial. Safety First ensures rapid response and immediate alerts to keep you safe.
+          In today's world, personal safety is crucial. Guardian ensures rapid response and immediate alerts to keep you safe.
         </p>
       </animated.div>
 
