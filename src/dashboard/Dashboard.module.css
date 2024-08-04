@@ -8,10 +8,23 @@
   margin-top: var(--header-height); /* Push the dashboard down to avoid overlapping with the header */
 }
 
-.flyButton {
+.buttonContainer {
   position: absolute;
   top: 85px;
   left: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between buttons */
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+
+
+.flyButton {
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -26,4 +39,35 @@
 .flyButton:hover {
   background-color: #f0f0f0;
   color: #000;
+}
+
+.scaleInput {
+  margin-top: 10px;
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+}
+
+.scaleInput label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.scaleInput input {
+  margin-right: 10px;
+}
+
+.applyButton {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.applyButton:hover {
+  background-color: #0056b3;
 }
