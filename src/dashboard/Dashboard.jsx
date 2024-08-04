@@ -34,6 +34,7 @@ const Map = () => {
 
     const fetchDataAndSetMarkers = async () => {
       const data = await fetchAndTransformMarkerData();
+      console.log(data);
       setMarkerData(data);
     };
 
@@ -298,6 +299,7 @@ const Map = () => {
       <FriendDetails
         friend={selectedFriend}
         onClose={closeFriendDetails}
+        markerData={markerData.filter(marker => marker.friendName === selectedFriend?.name)}
       />
       <button
         onClick={toggleHeatMap}

@@ -18,6 +18,13 @@
   text-align: center;
   position: relative;
   transform: translateX(17vw); /* Adjust the value as needed */
+  width: 60vw; /* Increase the width */
+  max-width: 1200px; /* Set a max width */
+  height: 80vh; /* Set a fixed height */
+  overflow: hidden; /* Hide overflow */
+  max-width: 80%;
+  max-height: 80%;
+  overflow-y: auto;
 }
 
 .closeButton {
@@ -40,4 +47,50 @@
 .name {
   font-size: 1.5rem;
   margin: 0;
+}
+
+.markerGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  overflow-y: auto; /* Make the grid scrollable */
+  height: calc(100% - 300px); /* Adjust height to fit within the container */
+  padding: 1rem;
+}
+.markerItem {
+  background-color: var(--marker-item-bg);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.markerGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.markerCard {
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.markerCard h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.markerCard p {
+  margin: 0.5rem 0;
+  color: #666;
+}
+
+.markerCard h4 {
+  margin: 0.5rem 0;
+  color: #333;
 }
