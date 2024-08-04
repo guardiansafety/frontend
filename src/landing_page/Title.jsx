@@ -13,7 +13,7 @@ const TitleSection = () => {
   const [isLaunching, setIsLaunching] = useState(false);
 
   const [titleItems] = useState(() => [
-    { text: 'Welcome to Safety First', className: styles.title },
+    { text: 'Welcome to Guardian', className: styles.title },
     { text: 'Your Safety, Our Priority', className: styles.subtitle }
   ]);
 

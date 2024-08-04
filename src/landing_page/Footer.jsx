@@ -7,7 +7,7 @@ const Footer = () => {
     <footer className={styles.footer}>
       <div className={styles.footerContent}>
         <div className={styles.footerSection}>
-          <h3>Safety First</h3>
+          <h3>Guardian</h3>
           <p>Empowering individuals with innovative personal safety solutions.</p>
         </div>
         <div className={styles.footerSection}>
@@ -21,7 +21,7 @@ const Footer = () => {
         </div>
         <div className={styles.footerSection}>
           <h4>Contact Us</h4>
-          <p>Email: info@safetyfirst.com</p>
+          <p>Email: info@guardian.com</p>
           <p>Phone: (555) 123-4567</p>
           <p>Address: 123 Safety Street, Secure City, SC 12345</p>
         </div>
@@ -36,7 +36,7 @@ const Footer = () => {
         </div>
       </div>
       <div className={styles.footerBottom}>
-        <p>&copy; 2024 Safety First. All rights reserved.</p>
+        <p>&copy; 2024 Guardian. All rights reserved.</p>
       </div>
     </footer>
   );

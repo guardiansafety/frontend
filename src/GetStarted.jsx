@@ -11,7 +11,7 @@ const GetStarted = () => {
   return (
     <div className={styles.getStartedContainer}>
       <div className={styles.getStartedContent}>
-        <h1>Welcome to Safety First</h1>
+        <h1>Welcome to Guardian</h1>
         <p>Your safety, our priority. Join us today to ensure a safer tomorrow.</p>
         <button className={styles.getStartedButton} onClick={handleGetStartedClick}>
           Get Started

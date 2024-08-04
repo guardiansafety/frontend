@@ -67,7 +67,7 @@ const TimelineSection = () => {
         <animated.div ref={todayRef} className={styles.todayItem} style={todayStyle}>
           <FaShieldAlt className={styles.icon} />
           <span className={styles.tag}>Today</span>
-          <p>Safety First introduces next-gen personal security</p>
+          <p>Guardian introduces next-gen personal security</p>
         </animated.div>
       </div>
     </section>
