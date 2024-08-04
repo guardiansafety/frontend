@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSpring, animated } from '@react-spring/web';
+import { useSpring, animated, useTrail } from '@react-spring/web';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShieldAlt, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -13,8 +13,8 @@ const TitleSection = () => {
   const [isLaunching, setIsLaunching] = useState(false);
 
   const [titleItems] = useState(() => [
-    { text: 'Welcome to Guardian', className: styles.title },
-    { text: 'Your Safety, Our Priority', className: styles.subtitle }
+    { text: 'Guardian', className: styles.title }, // Ensure the className is correct
+    { text: 'A wearable AI for SOS', className: styles.subtitle }
   ]);
 
   const trail = useTrail(titleItems.length, {
@@ -79,8 +79,10 @@ const TitleSection = () => {
       </div>
 
       <div className={styles.header}>
-        {titleItems.map((item, index) => (
-          <div key={index} className={item.className}>{item.text}</div>
+        {trail.map((props, index) => (
+          <animated.div key={index} style={props}>
+            <div className={titleItems[index].className}>{titleItems[index].text}</div>
+          </animated.div>
         ))}
       </div>
 
