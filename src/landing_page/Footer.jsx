@@ -35,7 +35,7 @@ const Footer = () => {
         </div>
         <div className={styles.footerSection}>
           <h4>Contact Us</h4>
-          <p>Email: info@safetyfirst.com</p>
+          <p>Email: info@guardian.com</p>
           <p>Phone: (555) 123-4567</p>
           <p>Address: 123 Safety Street, Secure City, SC 12345</p>
         </div>

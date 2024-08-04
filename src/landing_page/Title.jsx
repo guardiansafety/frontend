@@ -12,10 +12,16 @@ const TitleSection = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLaunching, setIsLaunching] = useState(false);
 
-  const titleItems = [
-    { text: 'Guardian', className: styles.title }, // Ensure the className is correct
-    { text: 'A wearable AI for SOS', className: styles.subtitle }
-  ];
+  const [titleItems] = useState(() => [
+    { text: 'Welcome to Guardian', className: styles.title },
+    { text: 'Your Safety, Our Priority', className: styles.subtitle }
+  ]);
+
+  const trail = useTrail(titleItems.length, {
+    from: { opacity: 0, transform: 'translate3d(0,-40px,0)' },
+    to: { opacity: 1, transform: 'translate3d(0,0px,0)' },
+    config: { mass: 5, tension: 2000, friction: 200 },
+  });
 
   const buttonProps = useSpring({
     scale: isHovered ? 1.1 : 1,

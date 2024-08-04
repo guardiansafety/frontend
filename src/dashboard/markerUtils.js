@@ -9,7 +9,7 @@ export const fetchAndTransformMarkerData = async () => {
     location: [item.location.longitude, item.location.latitude],
     description: item.description,
     timestamp: moment(item.timestamp).tz("America/Toronto").format('YYYY-MM-DD HH:mm:ss'),
-    emotions: item.emotions, // Add emotions here
+    emotions: item.emotions,
   }));
 
   const images = ['/snoopy.jpg', '/pikachu.jpg', '/bmo.jpg', '/minion.jpg', '/stitch.jpg'];
