@@ -1,43 +1,37 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSpring, animated, useTrail } from '@react-spring/web';
+import { useSpring, animated } from '@react-spring/web';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShieldAlt, faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { faShieldAlt, faArrowDown, faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons';
 import { useAuth0 } from '@auth0/auth0-react';
 import styles from './Title.module.css'; // Ensure the CSS file is imported
 
 const TitleSection = () => {
   const { isAuthenticated } = useAuth0();
   const navigate = useNavigate();
-  const [isHovered, setIsHovered] = useState(false);
+  const [hoveredButton, setHoveredButton] = useState(null);
   const [isLaunching, setIsLaunching] = useState(false);
 
-  const [titleItems] = useState(() => [
+  const titleItems = [
     { text: 'Guardian', className: styles.title }, // Ensure the className is correct
     { text: 'A wearable AI for SOS', className: styles.subtitle }
-  ]);
-
-  const trail = useTrail(titleItems.length, {
-    from: { opacity: 0, transform: 'translate3d(0,-40px,0)' },
-    to: { opacity: 1, transform: 'translate3d(0,0px,0)' },
-    config: { mass: 5, tension: 2000, friction: 200 },
-  });
+  ];
 
   const buttonProps = useSpring({
-    scale: isHovered ? 1.1 : 1,
-    boxShadow: isHovered
+    scale: hoveredButton ? 1.1 : 1,
+    boxShadow: hoveredButton
       ? '0 0 30px rgba(166, 75, 0, 0.9), 0 0 60px rgba(166, 75, 0, 0.6)'
       : '0 0 20px rgba(166, 75, 0, 0.6)',
     config: { mass: 1, tension: 500, friction: 15 },
   });
 
   const iconProps = useSpring({
-    transform: isHovered ? 'translateY(-5px) rotate(-15deg)' : 'translateY(0) rotate(0deg)',
+    transform: hoveredButton ? 'translateY(-5px) rotate(-15deg)' : 'translateY(0) rotate(0deg)',
     config: { tension: 300, friction: 10 },
   });
 
   const textProps = useSpring({
-    transform: isHovered ? 'translateY(2px)' : 'translateY(0)',
+    transform: hoveredButton ? 'translateY(2px)' : 'translateY(0)',
     config: { tension: 300, friction: 10 },
   });
 
@@ -69,6 +63,10 @@ const TitleSection = () => {
     window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
   };
 
+  const handleViewMap = () => {
+    navigate('/map');
+  };
+
   return (
     <animated.div className={`${styles.landingPage} ${isLaunching ? styles.launching : ''}`} style={launchProps}>
       <div className={styles.videoContainer}>
@@ -79,25 +77,35 @@ const TitleSection = () => {
       </div>
 
       <div className={styles.header}>
-        {trail.map((props, index) => (
-          <animated.div key={index} style={props}>
-            <div className={titleItems[index].className}>{titleItems[index].text}</div>
-          </animated.div>
+        {titleItems.map((item, index) => (
+          <div key={index} className={item.className}>{item.text}</div>
         ))}
       </div>
 
       <div className={styles.buttonWrapper}>
         <animated.button
           className={styles.launchButton}
-          style={buttonProps}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+          style={hoveredButton === 'launch' ? buttonProps : {}}
+          onMouseEnter={() => setHoveredButton('launch')}
+          onMouseLeave={() => setHoveredButton(null)}
           onClick={handleLaunch}
         >
-          <animated.div style={iconProps}>
+          <animated.div style={hoveredButton === 'launch' ? iconProps : {}}>
             <FontAwesomeIcon icon={faShieldAlt} className={styles.icon} />
           </animated.div>
-          <animated.span style={textProps}>Get Started</animated.span>
+          <animated.span style={hoveredButton === 'launch' ? textProps : {}}>Login/Signup</animated.span>
+        </animated.button>
+        <animated.button
+          className={`${styles.launchButton} ${styles.viewMapButton}`} // Add a new class for different color
+          style={hoveredButton === 'viewMap' ? buttonProps : {}}
+          onMouseEnter={() => setHoveredButton('viewMap')}
+          onMouseLeave={() => setHoveredButton(null)}
+          onClick={handleViewMap}
+        >
+          <animated.div style={hoveredButton === 'viewMap' ? iconProps : {}}>
+            <FontAwesomeIcon icon={faMapMarkedAlt} className={styles.icon} />
+          </animated.div>
+          <animated.span style={hoveredButton === 'viewMap' ? textProps : {}}>View Map</animated.span>
         </animated.button>
       </div>
 

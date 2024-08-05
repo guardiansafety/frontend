@@ -1,10 +1,11 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
+    host: true, // Make the server accessible on the network
     middleware: (app) => {
       app.use((req, res, next) => {
         const mimeTypes = {
@@ -23,5 +24,8 @@ export default defineConfig({
         next();
       });
     }
+  },
+  build: {
+    outDir: 'build' // Change output directory to 'build'
   }
-})
+});
