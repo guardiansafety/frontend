@@ -14,7 +14,7 @@ const TitleSection = () => {
 
   const titleItems = [
     { text: 'Guardian', className: styles.title }, // Ensure the className is correct
-    { text: 'A wearable AI for SOS', className: styles.subtitle }
+    { text: 'Your Universal Emergency Safety Solution', className: styles.subtitle }
   ];
 
   const buttonProps = useSpring({
