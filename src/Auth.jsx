@@ -9,7 +9,7 @@ export const Auth0ProviderWithNavigate = ({ children }) => {
   const navigate = useNavigate();
 
   const onRedirectCallback = (appState) => {
-    navigate(appState?.returnTo || '/describe');
+    navigate(appState?.returnTo || '/recordemergency');
   };
 
   return (
@@ -28,7 +28,7 @@ export const AuthPage = () => {
   const { loginWithRedirect } = useAuth0();
 
   useEffect(() => {
-    loginWithRedirect({ appState: { returnTo: "/describe" } });
+    loginWithRedirect({ appState: { returnTo: "/recordemergency" } });
   }, [loginWithRedirect]);
 
   return <div>Redirecting to login...</div>;
@@ -40,7 +40,7 @@ export const CallbackPage = () => {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      navigate('/describe');
+      navigate('/recordemergency');
     }
   }, [isAuthenticated, isLoading, navigate]);
 

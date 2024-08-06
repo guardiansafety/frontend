@@ -64,7 +64,7 @@ const TitleSection = () => {
   };
 
   const handleViewMap = () => {
-    navigate('/map');
+    setIsLaunching(true);
   };
 
   return (

@@ -1,11 +1,12 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import axios from 'axios';
 import Webcam from 'react-webcam';
 import Modal from 'react-modal';
-import { FaCamera, FaUpload, FaAmbulance, FaFireExtinguisher, FaFirstAid, FaPhoneVolume } from 'react-icons/fa';
+import { FaCamera, FaUpload, FaVideo } from 'react-icons/fa';
 import { useAuth0 } from '@auth0/auth0-react';
 import LoadingSpinner from '../LoadingSpinner';
 import Notification from '../Notification';
+import { extractFramesFromVideo } from './extractFrames';
 import styles from './ImageDescriber.module.css';
 
 Modal.setAppElement('#root');
@@ -17,12 +18,17 @@ const ImageDescriber = () => {
   const [description, setDescription] = useState('');
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1000);
   const [location, setLocation] = useState(null);
   const [notification, setNotification] = useState(null);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [capturing, setCapturing] = useState(false);
+  const [recordedChunks, setRecordedChunks] = useState([]);
   const webcamRef = useRef(null);
   const fileInputRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1000);
@@ -62,6 +68,91 @@ const ImageDescriber = () => {
     }
   };
 
+  const handleVideoClick = () => {
+    setIsVideoModalOpen(true);
+  };
+
+  const handleStartCaptureClick = useCallback(() => {
+    setCapturing(true);
+    setRecordedChunks([]);
+    const stream = webcamRef.current.stream;
+
+    if (!stream) {
+      console.error("Webcam stream not available");
+      return;
+    }
+
+    mediaRecorderRef.current = new MediaRecorder(stream, {
+      mimeType: "video/webm"
+    });
+
+    mediaRecorderRef.current.addEventListener("dataavailable", handleDataAvailable);
+    mediaRecorderRef.current.addEventListener("stop", handleStopCaptureClick);
+    mediaRecorderRef.current.start();
+
+    setRecordingTime(0);
+    const interval = setInterval(() => {
+      setRecordingTime((prev) => {
+        if (prev >= 15) {
+          clearInterval(interval);
+          handleStopCaptureClick();
+          return 15;
+        }
+        return prev + 1;
+      });
+    }, 1000);
+  }, [webcamRef, setCapturing, mediaRecorderRef]);
+
+  
+  const handleDataAvailable = useCallback(
+    ({ data }) => {
+      if (data.size > 0) {
+        setRecordedChunks((prev) => prev.concat(data));
+      }
+    },
+    [setRecordedChunks]
+  );
+
+
+  const handleStopCaptureClick = useCallback(async () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+      setCapturing(false);
+      setRecordingTime(0);
+
+      if (recordedChunks.length === 0) {
+        console.error("No video data recorded.");
+        return;
+      }
+
+      const videoBlob = new Blob(recordedChunks, { type: 'video/webm' });
+      const videoFile = new File([videoBlob], 'video.webm', { type: 'video/webm' });
+
+      setLoading(true);
+      try {
+        const frames = await extractFramesFromVideo(videoFile, 5);
+        const files = frames.map((blob, index) => new File([blob], `frame${index}.jpg`, { type: 'image/jpeg' }));
+        await submitImages(files);
+      } catch (error) {
+        console.error("Error extracting frames:", error);
+      }
+      setIsVideoModalOpen(false);
+      setLoading(false);
+
+      // Download the video
+      const url = URL.createObjectURL(videoBlob);
+      const a = document.createElement("a");
+      document.body.appendChild(a);
+      a.style = "display: none";
+      a.href = url;
+      a.download = "video.webm";
+      a.click();
+      window.URL.revokeObjectURL(url);
+      setRecordedChunks([]);
+    }
+  }, [mediaRecorderRef, webcamRef, setCapturing, recordedChunks]);
+
+
   const handleCapture = useCallback(async () => {
     const imageSrc = webcamRef.current.getScreenshot();
     fetch(imageSrc)
@@ -77,7 +168,6 @@ const ImageDescriber = () => {
 
   const submitImages = async (files) => {
     if (!isAuthenticated) {
-      setNotification({ message: 'Attempting to log in...', type: 'info' });
       loginWithRedirect();
       return;
     }
@@ -125,12 +215,6 @@ const ImageDescriber = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.iconsBackground}>
-        <FaAmbulance className={`${styles.icon} ${styles.icon1}`} />
-        <FaFireExtinguisher className={`${styles.icon} ${styles.icon2}`} />
-        <FaFirstAid className={`${styles.icon} ${styles.icon3}`} />
-        <FaPhoneVolume className={`${styles.icon} ${styles.icon4}`} />
-      </div>
       <h1 className={styles.heading}>
         Record Emergency
       </h1>
@@ -147,6 +231,9 @@ const ImageDescriber = () => {
         <div className={styles.buttonsContainer}>
           <button className={styles.button} onClick={handleCameraClick}>
             <FaCamera className={styles.buttonIcon} /> Take a Photo
+          </button>
+          <button className={styles.button} onClick={handleVideoClick}>
+            <FaVideo className={styles.buttonIcon} /> Record Video
           </button>
           <label className={styles.button}>
             <FaUpload className={styles.buttonIcon} /> Upload Images
@@ -181,6 +268,31 @@ const ImageDescriber = () => {
         <button type="button" className={styles.button} onClick={handleCapture}>
           Capture Photo
         </button>
+      </Modal>
+      <Modal
+        isOpen={isVideoModalOpen}
+        onRequestClose={() => {
+          setIsVideoModalOpen(false);
+          setCapturing(false);
+          if (webcamRef.current && webcamRef.current.stream) {
+            const tracks = webcamRef.current.stream.getTracks();
+            tracks.forEach(track => track.stop());
+          }
+        }}
+        className={styles.modal}
+        overlayClassName={styles.overlay}
+      >
+        <Webcam audio={false} ref={webcamRef} className={styles.webcam} />
+        <div className={styles.recordingTime}>{recordingTime}s</div>
+        {capturing ? (
+          <button type="button" className={styles.button} onClick={handleStopCaptureClick}>
+            Stop Recording
+          </button>
+        ) : (
+          <button type="button" className={styles.button} onClick={handleStartCaptureClick}>
+            Start Filming
+          </button>
+        )}
       </Modal>
       {loading && <LoadingSpinner />}
       {notification && (

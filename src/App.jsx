@@ -7,7 +7,7 @@ import Profile from './profile/Profile';
 import Dashboard from './dashboard/Dashboard';
 import GetStarted from './GetStarted';
 import { ThemeProvider } from './ColorTheme';
-import EmergencyMap from './MapTestDaniel';
+import EmergencyMap from './2dmap/2dmap';
 import './App.css';
 
 const AppContent = () => {
@@ -20,13 +20,13 @@ const AppContent = () => {
       <div className="App">
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/describe" element={<ImageDescriber />} />
+          <Route path="/recordemergency" element={<ImageDescriber />} />
           <Route path="/get-started" element={<GetStarted />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/callback" element={<CallbackPage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/mapTest" element={<EmergencyMap />} />
+          <Route path="/2dmap" element={<EmergencyMap />} />
         </Routes>
       </div>
     </>

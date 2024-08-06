@@ -1,18 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 
-.App {
-  text-align: center;
-  background: var(--background);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Poppins', sans-serif;
-  color: var(--text);
-}
-
-/* Setting our color scheme */
 :root {
   --background: #f0f4f8;
   --secondary-bg: #f8f9fa;
@@ -27,10 +14,7 @@
   --button-gradient: linear-gradient(45deg, #c5b192, #645c57);
   --button-shadow: 0 4px 6px rgba(70, 47, 31, 0.1);
 
-
-
   --navbar-bg: rgba(255, 255, 255, 0.9);
-
 
   --landing-bg-primary: rgba(44, 44, 44, 0.8); /* Dark grey opacity 80% */
   --landing-bg-secondary: #000000; /* Very dark grey */
@@ -50,9 +34,8 @@
   --popup-bg-color: rgba(255, 255, 255, 0.8);
   --marker-border-color: #e8e8e8;
 
-
   --transition: all 0.3s ease;
-
+  --map-filter: none;
 }
 
 [data-theme='dark'] {
@@ -87,10 +70,11 @@
   --popup-bg-color: rgba(31, 40, 53, 0.8);
   --marker-border-color: #e8e8e8;
 
-
   --navbar-bg: rgba(31, 41, 55, 0.9);
 
   --transition: all 0.3s ease;
+
+  --map-filter: invert(100%) hue-rotate(180deg) brightness(90%) contrast(90%);
 }
 
 /* Scrollbar styling for ALL scrollbars */
@@ -115,4 +99,16 @@
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+}
+
+.App {
+  text-align: center;
+  background: var(--background);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  color: var(--text);
 }

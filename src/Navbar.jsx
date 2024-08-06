@@ -40,9 +40,9 @@ const Navbar = () => {
           <div className={styles.navLinks}>
             <CustomNavLink to="/">Home</CustomNavLink>
             <CustomNavLink to="/dashboard">Dashboard</CustomNavLink>
-            <CustomNavLink to="/describe">Describe</CustomNavLink>
+            <CustomNavLink to="/recordemergency">Describe</CustomNavLink>
             <CustomNavLink to="/profile">Profile</CustomNavLink>
-            <CustomNavLink to="/mapTest">Map</CustomNavLink>
+            <CustomNavLink to="/2dmap">2d Map</CustomNavLink>
           </div>
         </div>
         <div className={styles.authButtonContainer}>
