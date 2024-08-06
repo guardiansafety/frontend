@@ -8,6 +8,7 @@ import Dashboard from './dashboard/Dashboard';
 import GetStarted from './GetStarted';
 import { ThemeProvider } from './ColorTheme';
 import EmergencyMap from './2dmap/2dmap';
+import ImageDescriberMinimal from './img_description/minimalExample';
 import './App.css';
 
 const AppContent = () => {
@@ -27,6 +28,7 @@ const AppContent = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/2dmap" element={<EmergencyMap />} />
+          <Route path="/minimal" element={<ImageDescriberMinimal />} />
         </Routes>
       </div>
     </>

@@ -54,119 +54,9 @@ const ImageDescriber = () => {
     }
   }, []);
 
-  const handleFileChange = async (event) => {
-    const newFiles = [...selectedFiles, ...event.target.files];
-    setSelectedFiles(newFiles);
-    await submitImages(newFiles);
-  };
+ 
 
-  const handleCameraClick = () => {
-    if (isMobile) {
-      fileInputRef.current.click();
-    } else {
-      setIsModalOpen(true);
-    }
-  };
-
-  const handleVideoClick = () => {
-    setIsVideoModalOpen(true);
-  };
-
-  const handleStartCaptureClick = useCallback(() => {
-    setCapturing(true);
-    setRecordedChunks([]);
-    const stream = webcamRef.current.stream;
-
-    if (!stream) {
-      console.error("Webcam stream not available");
-      return;
-    }
-
-    mediaRecorderRef.current = new MediaRecorder(stream, {
-      mimeType: "video/webm"
-    });
-
-    mediaRecorderRef.current.addEventListener("dataavailable", handleDataAvailable);
-    mediaRecorderRef.current.addEventListener("stop", handleStopCaptureClick);
-    mediaRecorderRef.current.start();
-
-    setRecordingTime(0);
-    const interval = setInterval(() => {
-      setRecordingTime((prev) => {
-        if (prev >= 15) {
-          clearInterval(interval);
-          handleStopCaptureClick();
-          return 15;
-        }
-        return prev + 1;
-      });
-    }, 1000);
-  }, [webcamRef, setCapturing, mediaRecorderRef]);
-
-  
-  const handleDataAvailable = useCallback(
-    ({ data }) => {
-      if (data.size > 0) {
-        setRecordedChunks((prev) => prev.concat(data));
-      }
-    },
-    [setRecordedChunks]
-  );
-
-
-  const handleStopCaptureClick = useCallback(async () => {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-      mediaRecorderRef.current.stop();
-      setCapturing(false);
-      setRecordingTime(0);
-
-      if (recordedChunks.length === 0) {
-        console.error("No video data recorded.");
-        return;
-      }
-
-      const videoBlob = new Blob(recordedChunks, { type: 'video/webm' });
-      const videoFile = new File([videoBlob], 'video.webm', { type: 'video/webm' });
-
-      setLoading(true);
-      try {
-        const frames = await extractFramesFromVideo(videoFile, 5);
-        const files = frames.map((blob, index) => new File([blob], `frame${index}.jpg`, { type: 'image/jpeg' }));
-        await submitImages(files);
-      } catch (error) {
-        console.error("Error extracting frames:", error);
-      }
-      setIsVideoModalOpen(false);
-      setLoading(false);
-
-      // Download the video
-      const url = URL.createObjectURL(videoBlob);
-      const a = document.createElement("a");
-      document.body.appendChild(a);
-      a.style = "display: none";
-      a.href = url;
-      a.download = "video.webm";
-      a.click();
-      window.URL.revokeObjectURL(url);
-      setRecordedChunks([]);
-    }
-  }, [mediaRecorderRef, webcamRef, setCapturing, recordedChunks]);
-
-
-  const handleCapture = useCallback(async () => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    fetch(imageSrc)
-      .then(res => res.blob())
-      .then(async blob => {
-        const file = new File([blob], "photo.jpg", { type: "image/jpeg" });
-        const newFiles = [...selectedFiles, file];
-        setSelectedFiles(newFiles);
-        setIsModalOpen(false);
-        await submitImages(newFiles);
-      });
-  }, [webcamRef, selectedFiles]);
-
-  const submitImages = async (files) => {
+  const submitImages = useCallback(async (files) => {
     if (!isAuthenticated) {
       loginWithRedirect();
       return;
@@ -211,7 +101,132 @@ const ImageDescriber = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [isAuthenticated, loginWithRedirect, user, location]);
+  
+
+
+
+  const handleDataAvailable = useCallback(
+    ({ data }) => {
+      if (data.size > 0) {
+        setRecordedChunks((prev) => prev.concat(data));
+      }
+    },
+    []
+  );
+
+
+
+  const handleStopCaptureClick = useCallback(async () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+      setCapturing(false);
+      setRecordingTime(0);
+    }
+
+    if (recordedChunks.length === 0) {
+      console.error("No video data recorded.");
+      return;
+    }
+
+    const videoBlob = new Blob(recordedChunks, { type: 'video/webm' });
+    const videoFile = new File([videoBlob], 'video.webm', { type: 'video/webm' });
+
+    setLoading(true);
+    try {
+      const frames = await extractFramesFromVideo(videoFile, 5);
+      const files = frames.map((blob, index) => new File([blob], `frame${index}.jpg`, { type: 'image/jpeg' }));
+      await submitImages(files);
+    } catch (error) {
+      console.error("Error extracting frames:", error);
+      setError('Failed to process video. Please try again.');
+    }
+    setIsVideoModalOpen(false);
+    setLoading(false);
+
+    // Download the video
+    const url = URL.createObjectURL(videoBlob);
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+    a.href = url;
+    a.download = "video.webm";
+    a.click();
+    window.URL.revokeObjectURL(url);
+    setRecordedChunks([]);
+  }, [recordedChunks, submitImages]);
+
+
+  const handleStartCaptureClick = useCallback(() => {
+    setCapturing(true);
+    setRecordedChunks([]);
+    const stream = webcamRef.current.stream;
+
+    if (!stream) {
+      console.error("Webcam stream not available");
+      return;
+    }
+
+    mediaRecorderRef.current = new MediaRecorder(stream, {
+      mimeType: "video/webm"
+    });
+
+    mediaRecorderRef.current.addEventListener("dataavailable", handleDataAvailable);
+    mediaRecorderRef.current.start();
+
+    setRecordingTime(0);
+    const interval = setInterval(() => {
+      setRecordingTime((prev) => {
+        if (prev >= 15) {
+          clearInterval(interval);
+          handleStopCaptureClick();
+          return 15;
+        }
+        return prev + 1;
+      });
+    }, 1000);
+  }, [handleDataAvailable, handleStopCaptureClick]);
+
+
+
+
+
+  const handleCapture = useCallback(async () => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    fetch(imageSrc)
+      .then(res => res.blob())
+      .then(async blob => {
+        const file = new File([blob], "photo.jpg", { type: "image/jpeg" });
+        const newFiles = [...selectedFiles, file];
+        setSelectedFiles(newFiles);
+        setIsModalOpen(false);
+        await submitImages(newFiles);
+      });
+  }, [webcamRef, selectedFiles, submitImages]);
+
+
+
+  const handleFileChange = useCallback(async (event) => {
+    const newFiles = [...selectedFiles, ...event.target.files];
+    setSelectedFiles(newFiles);
+    await submitImages(newFiles);
+  }, [selectedFiles, submitImages]);
+
+
+
+  const handleCameraClick = useCallback(() => {
+    if (isMobile) {
+      fileInputRef.current.click();
+    } else {
+      setIsModalOpen(true);
+    }
+  }, [isMobile]);
+
+
+
+  const handleVideoClick = useCallback(() => {
+    setIsVideoModalOpen(true);
+  }, []);
 
   return (
     <div className={styles.container}>

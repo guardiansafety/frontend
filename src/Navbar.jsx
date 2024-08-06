@@ -43,6 +43,7 @@ const Navbar = () => {
             <CustomNavLink to="/recordemergency">Describe</CustomNavLink>
             <CustomNavLink to="/profile">Profile</CustomNavLink>
             <CustomNavLink to="/2dmap">2d Map</CustomNavLink>
+            <CustomNavLink to="/minimal">Minimal Example Video</CustomNavLink>
           </div>
         </div>
         <div className={styles.authButtonContainer}>
