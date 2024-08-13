@@ -6,7 +6,6 @@ import { FaCamera, FaUpload, FaVideo } from 'react-icons/fa';
 import { useAuth0 } from '@auth0/auth0-react';
 import LoadingSpinner from '../LoadingSpinner';
 import Notification from '../Notification';
-import { extractFramesFromVideo } from './extractFrames';
 import styles from './ImageDescriber.module.css';
 
 Modal.setAppElement('#root');
@@ -93,15 +92,16 @@ const ImageDescriber = () => {
 
       setDescription(addImageResponse.data.description);
       setDescriptionModalOpen(true);
-      setNotification({ message: 'Emergency data sent successfully!', type: 'success' });
+      setNotification({ message: 'Emergency data sent and analyzed successfully!', type: 'success' });
     } catch (err) {
-      setError('Failed to get descriptions. Please try again.');
+      setError('Failed to process emergency data. Please try again.');
       console.error('Error submitting emergency data:', err);
-      setNotification({ message: 'Failed to send emergency data.', type: 'error' });
+      setNotification({ message: 'Failed to process emergency data.', type: 'error' });
     } finally {
       setLoading(false);
     }
   }, [isAuthenticated, loginWithRedirect, user, location]);
+
   
 
 

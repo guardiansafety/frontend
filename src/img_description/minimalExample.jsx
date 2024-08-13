@@ -1,5 +1,68 @@
-import React, { useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import Webcam from 'react-webcam';
+
+const extractFramesFromVideo = (videoBlob, frameCount = 15, maxDuration = 15) => {
+  return new Promise((resolve, reject) => {
+    const video = document.createElement('video');
+    video.src = URL.createObjectURL(videoBlob);
+
+    video.onloadedmetadata = () => {
+      console.log('Video metadata loaded.');
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d', { willReadFrequently: true });
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const frames = [];
+
+      const captureFrame = () => {
+        if (frames.length < frameCount && video.currentTime < maxDuration) {
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+          
+          // Check if the frame is not entirely black
+          const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+          const isBlack = imageData.data.every((value, index) => index % 4 === 3 || value === 0);
+          
+          if (!isBlack) {
+            canvas.toBlob(blob => {
+              frames.push(blob);
+              if (frames.length < frameCount) {
+                // Move to the next frame
+                video.currentTime += 1; // Move 2s forward
+              } else {
+                resolve(frames);
+              }
+            }, 'image/jpeg', 0.95);
+          } else {
+            console.log('Skipping black frame');
+            video.currentTime += 0.1; // Move 100ms forward
+          }
+        } else {
+          resolve(frames);
+        }
+      };
+
+      video.onseeked = () => {
+        if (video.currentTime < Math.min(video.duration, maxDuration)) {
+          captureFrame();
+        } else {
+          resolve(frames);
+        }
+      };
+      
+      // Start capturing frames
+      video.currentTime = 0;
+    };
+
+    video.onerror = (e) => {
+      console.error('Error loading video:', e);
+      reject(new Error('Failed to load video'));
+    };
+
+    // Trigger metadata load
+    video.load();
+  });
+};
+
 
 const ImageDescriberMinimal = () => {
   const webcamRef = useRef(null);
@@ -9,6 +72,32 @@ const ImageDescriberMinimal = () => {
   const [recordingTime, setRecordingTime] = useState(0);
   const timerRef = useRef(null);
   const [extractedFrames, setExtractedFrames] = useState([]);
+  const [description, setDescription] = useState('');
+  const [username, setUsername] = useState('test');
+  const [emergencyId, setEmergencyId] = useState('');
+  const [error, setError] = useState('');
+  const [location, setLocation] = useState(null);
+
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error getting geolocation:", error);
+          setError("Failed to get location. Please enable location services.");
+        }
+      );
+    } else {
+      setError("Geolocation is not supported by your browser.");
+    }
+  }, []);
+
 
   const handleDataAvailable = useCallback(
     ({ data }) => {
@@ -18,6 +107,45 @@ const ImageDescriberMinimal = () => {
     },
     []
   );
+
+  const createInitialEvent = useCallback(() => {
+    if (!location) {
+      setError("Location not available. Please try again.");
+      return;
+    }
+
+    fetch(`http://localhost:3006/create-emergency-event/${username}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        location: location,
+        description: '' // We'll leave this empty and let the AI fill it later
+      })
+    })
+    .then(res => {
+      if (!res.ok) {
+        return res.text().then(text => { throw new Error(text) });
+      }
+      return res.json();
+    })
+    .then(data => {
+      setEmergencyId(data.emergencyId);
+      console.log('Emergency event created:', data);
+    })
+    .catch(error => {
+      console.error('Error creating initial event:', error);
+      setError('Failed to create initial event: ' + error.message);
+    });
+  }, [username, location]);
+  
+  useEffect(() => {
+    if (location) {
+      createInitialEvent();
+    }
+  }, [createInitialEvent, location]);
+
 
   const handleStartCaptureClick = useCallback(() => {
     setCapturing(true);
@@ -44,88 +172,51 @@ const ImageDescriberMinimal = () => {
   }, [handleDataAvailable]);
 
   const handleStopCaptureClick = useCallback(() => {
-    mediaRecorderRef.current.stop();
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+    }
     setCapturing(false);
     clearInterval(timerRef.current);
   }, []);
 
-  const handleDownload = useCallback(() => {
-    if (recordedChunks.length) {
-      const blob = new Blob(recordedChunks, {
-        type: "video/webm"
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      document.body.appendChild(a);
-      a.style = "display: none";
-      a.href = url;
-      a.download = "react-webcam-stream-capture.webm";
-      a.click();
-      window.URL.revokeObjectURL(url);
-    }
-  }, [recordedChunks]);
 
-  const extractFrames = useCallback(() => {
-    console.log("Extract Frames function called");
-    if (recordedChunks.length) {
-      const blob = new Blob(recordedChunks, { type: "video/webm" });
-      const videoUrl = URL.createObjectURL(blob);
-      
-      const video = document.createElement('video');
-      video.src = videoUrl;
-      
-      video.onloadedmetadata = () => {
-        console.log("Video metadata loaded. Width:", video.videoWidth, "Height:", video.videoHeight);
-        
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        
-        const frames = [];
-        const frameCount = 5;
-        let capturedFrames = 0;
-  
-        const captureFrame = () => {
-          if (capturedFrames < frameCount) {
-            console.log(`Capturing frame ${capturedFrames + 1} of ${frameCount}`);
-            context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-            canvas.toBlob((frameBlob) => {
-              const frameUrl = URL.createObjectURL(frameBlob);
-              frames.push(frameUrl);
-              capturedFrames++;
-              if (capturedFrames < frameCount) {
-                requestAnimationFrame(captureFrame);
-              } else {
-                console.log("All frames captured:", frames);
-                setExtractedFrames(frames);
-                URL.revokeObjectURL(videoUrl);
-                video.pause();
-              }
-            }, 'image/jpeg');
-          }
-        };
-  
-        video.onplay = () => {
-          requestAnimationFrame(captureFrame);
-        };
-  
-        video.onerror = (e) => {
-          console.error("Error loading video:", e);
-        };
-  
-        // Start playing the video
-        video.play();
-      };
-  
-      // Trigger metadata load
-      video.load();
-  
+
+
+  const processVideo = useCallback(async () => {
+    if (recordedChunks.length && emergencyId) {
+      const videoBlob = new Blob(recordedChunks, { type: "video/webm" });
+      try {
+        const frames = await extractFramesFromVideo(videoBlob);
+        setExtractedFrames(frames.map(blob => URL.createObjectURL(blob)));
+
+        const formData = new FormData();
+        frames.forEach((frame, index) => {
+          formData.append('images', frame, `frame${index}.jpg`);
+        });
+
+        console.log(`Sending request to: http://localhost:3006/add-emergency-image/${username}/${emergencyId}`);
+
+        const response = await fetch(`http://localhost:3006/add-emergency-image/${username}/${emergencyId}`, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+
+        const data = await response.json();
+        setDescription(data.description);
+      } catch (error) {
+        console.error('Error processing video:', error);
+        setError('Failed to process video: ' + error.message);
+      }
     } else {
-      console.log("No recorded chunks available");
+      setError('No video recorded or emergency ID not set');
     }
-  }, [recordedChunks]);
-  
+  }, [recordedChunks, username, emergencyId]);
+
   return (
     <div>
       <Webcam audio={false} ref={webcamRef} />
@@ -135,18 +226,24 @@ const ImageDescriberMinimal = () => {
         <button onClick={handleStartCaptureClick}>Start Capture</button>
       )}
       {recordedChunks.length > 0 && (
-        <>
-          <button onClick={handleDownload}>Download Video</button>
-          <button onClick={extractFrames}>Extract Frames</button>
-        </>
+        <button onClick={processVideo}>Process Video</button>
       )}
       <div>Recording Time: {recordingTime}s</div>
       <div>Extracted Frames: {extractedFrames.length}</div>
+      <div>Username: {username}</div>
+      <div>Emergency ID: {emergencyId}</div>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         {extractedFrames.map((frame, index) => (
           <img key={index} src={frame} alt={`Frame ${index + 1}`} style={{ width: '200px', margin: '5px' }} />
         ))}
       </div>
+      <div>
+        Description:
+        <p>{description}</p>
+      </div>
+      <div>Location: {location ? `Lat: ${location.latitude}, Lon: ${location.longitude}` : 'Getting location...'}</div>
+
+      {error && <div style={{ color: 'red' }}>Error: {error}</div>}
     </div>
   );
 };

@@ -1,10 +1,13 @@
-export const extractFramesFromVideo = (videoBlob, frameCount = 5) => {
+import { useEffect, useState, useRef, useCallback } from 'react';
+import Webcam from 'react-webcam';
+
+const extractFramesFromVideo = (videoBlob, frameCount = 5) => {
   return new Promise((resolve, reject) => {
     const video = document.createElement('video');
     video.src = URL.createObjectURL(videoBlob);
 
     video.onloadedmetadata = () => {
-      alert('Video metadata loaded. Duration:', video.duration);
+      console.log('Video metadata loaded. Duration:', video.duration);
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
       canvas.width = video.videoWidth;

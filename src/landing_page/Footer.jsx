@@ -5,6 +5,8 @@ import Notification from '../Notification';
 import styles from './Footer.module.css';
 
 const Footer = () => {
+
+  /*
   const [notification, setNotification] = useState(null);
 
   const showNotification = (message) => {
@@ -17,9 +19,14 @@ const Footer = () => {
     showNotification('Currently unconfigured :)');
   };
 
+  */
+
   return (
     <footer className={styles.footer}>
-      <div className={styles.footerContent}>
+
+      { /*
+      
+       <div className={styles.footerContent}>
         <div className={styles.footerSection}>
           <h3>Guardian</h3>
           <p>Empowering individuals with innovative personal safety solutions.</p>
@@ -49,12 +56,18 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      */ }
+     
       <div className={styles.footerBottom}>
         <p>&copy; 2024 Guardian. All rights reserved.</p>
       </div>
+      { /*
       {notification && (
         <Notification message={notification} type="info" onClose={() => setNotification(null)} />
       )}
+      */ }
+
     </footer>
   );
 };
