@@ -1,39 +1,50 @@
-import { useContext, useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { useAuth0 } from '@auth0/auth0-react';
+import React, { useContext } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { FaSun, FaMoon } from 'react-icons/fa';
 import { ThemeContext } from './ColorTheme';
+import { AuthContext } from './App';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
-  const { user, logout, isAuthenticated, loginWithRedirect } = useAuth0();
   const { theme, toggleTheme } = useContext(ThemeContext);
-  const [username, setUsername] = useState('');
+  const { authState, setAuthState } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (isAuthenticated && user?.nickname) {
-        try {
-          const response = await fetch(`http://localhost:3006/profile?username=${user.nickname}`);
-          if (response.ok) {
-            const data = await response.json();
-            setUsername(data.username);
-          }
-        } catch (error) {
-          console.error('Error fetching profile:', error);
+  const handleLogout = async () => {
+    // Clear auth state
+    setAuthState({ token: null, username: null });
+
+    // Clear local storage
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+
+    // Clear session storage (if you're using it)
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('username');
+
+    // Optionally, call the backend to invalidate the token
+    try {
+      await fetch('http://localhost:3006/logout', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authState.token}`,
+          'Content-Type': 'application/json'
         }
-      }
-    };
+      });
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
 
-    fetchProfile();
-  }, [isAuthenticated, user]);
+    // Navigate to home page
+    navigate('/');
+  };
 
   return (
     <nav className={styles.navbar}>
       <div className={styles.navContent}>
         <div className={styles.userInfo}>
-          {isAuthenticated && username && (
-            <span className={styles.userName}>Welcome, {username}</span>
+          {authState.username && (
+            <span className={styles.userName}>Welcome, {authState.username}</span>
           )}
         </div>
         <div className={styles.navLinksContainer}>
@@ -47,15 +58,15 @@ const Navbar = () => {
           </div>
         </div>
         <div className={styles.authButtonContainer}>
-          {isAuthenticated ? (
+          {authState.token ? (
             <button
               className={styles.authButton}
-              onClick={() => logout({ returnTo: window.location.origin })}
+              onClick={handleLogout}
             >
               Log Out
             </button>
           ) : (
-            <button className={styles.authButton} onClick={() => loginWithRedirect()}>
+            <button className={styles.authButton} onClick={() => navigate('/login')}>
               Log In
             </button>
           )}

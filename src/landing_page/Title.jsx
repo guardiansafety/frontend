@@ -52,7 +52,7 @@ const TitleSection = () => {
         if (isAuthenticated) {
           navigate('/dashboard');
         } else {
-          navigate('/auth');
+          navigate('/login');
         }
       }, 1000);
       return () => clearTimeout(timer);

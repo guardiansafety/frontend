@@ -1,12 +1,13 @@
-import React, { useEffect, useState, useRef, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
-import { useAuth0 } from '@auth0/auth0-react';
 import L from 'leaflet';
 import moment from 'moment-timezone';
+import { useNavigate } from 'react-router-dom';
 import styles from './2dmap.module.css';
 import { ThemeContext } from '../ColorTheme';
+import { AuthContext } from '../App';
 
 const getColorByUsername = (username) => {
   const colors = [
@@ -41,7 +42,8 @@ const MapController = ({ center, zoom }) => {
 };
 
 const EmergencyMap = () => {
-  const { isAuthenticated, loginWithRedirect } = useAuth0();
+  const { authState } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [emergencies, setEmergencies] = useState([]);
   const [recentEmergencies, setRecentEmergencies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -49,20 +51,22 @@ const EmergencyMap = () => {
   const [mapZoom, setMapZoom] = useState(12);
   const [selectedEmergency, setSelectedEmergency] = useState(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const theme = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (authState.token) {
       fetchEmergencies();
       fetchMostRecentEmergencies();
     } else {
-      loginWithRedirect();
+      navigate('/login');
     }
-  }, [isAuthenticated]);
+  }, [authState.token, navigate]);
 
   const fetchEmergencies = async () => {
     try {
-      const response = await axios.get('http://localhost:3006/get-all-emergencies');
+      const response = await axios.get('http://localhost:3006/get-all-emergencies', {
+        headers: { Authorization: `Bearer ${authState.token}` }
+      });
       setEmergencies(response.data);
     } catch (error) {
       console.error('Error fetching emergencies:', error);
@@ -73,7 +77,9 @@ const EmergencyMap = () => {
 
   const fetchMostRecentEmergencies = async () => {
     try {
-      const response = await axios.get('http://localhost:3006/most-recent-emergencies');
+      const response = await axios.get('http://localhost:3006/most-recent-emergencies', {
+        headers: { Authorization: `Bearer ${authState.token}` }
+      });
       setRecentEmergencies(response.data);
     } catch (error) {
       console.error('Error fetching most recent emergencies:', error);
@@ -90,6 +96,10 @@ const EmergencyMap = () => {
     setIsCollapsed(!isCollapsed);
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className={styles.mapWrapper}>
       <button 
@@ -103,17 +113,13 @@ const EmergencyMap = () => {
       </button>
       <div className={`${styles.recentEmergencies} ${isCollapsed ? styles.collapsed : ''}`}>
         <h2>Recent Emergencies</h2>
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          <ul>
-            {recentEmergencies.map((emergency, index) => (
-              <li key={index} onClick={() => handleZoomToEmergency(emergency)}>
-                {emergency.username} - {moment(emergency.timestamp).tz("America/Toronto").format('MM/DD HH:mm')}
-              </li>
-            ))}
-          </ul>
-        )}
+        <ul>
+          {recentEmergencies.map((emergency, index) => (
+            <li key={index} onClick={() => handleZoomToEmergency(emergency)}>
+              {emergency.username} - {moment(emergency.timestamp).tz("America/Toronto").format('MM/DD HH:mm')}
+            </li>
+          ))}
+        </ul>
       </div>
       <MapContainer center={mapCenter} zoom={mapZoom} className={styles.mapContainer}>
         <MapController center={mapCenter} zoom={mapZoom} />

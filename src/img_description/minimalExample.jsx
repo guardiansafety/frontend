@@ -1,5 +1,8 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Webcam from 'react-webcam';
+import { AuthContext } from '../App';  // Adjust the import path as needed
+
 
 const extractFramesFromVideo = (videoBlob, frameCount = 15, maxDuration = 15) => {
   return new Promise((resolve, reject) => {
@@ -65,6 +68,8 @@ const extractFramesFromVideo = (videoBlob, frameCount = 15, maxDuration = 15) =>
 
 
 const ImageDescriberMinimal = () => {
+  const { authState } = useContext(AuthContext);
+  const navigate = useNavigate();
   const webcamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [capturing, setCapturing] = useState(false);
@@ -73,11 +78,15 @@ const ImageDescriberMinimal = () => {
   const timerRef = useRef(null);
   const [extractedFrames, setExtractedFrames] = useState([]);
   const [description, setDescription] = useState('');
-  const [username, setUsername] = useState('test');
   const [emergencyId, setEmergencyId] = useState('');
   const [error, setError] = useState('');
   const [location, setLocation] = useState(null);
 
+  useEffect(() => {
+    if (!authState.token) {
+      navigate('/login');
+    }
+  }, [authState.token, navigate]);
 
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -98,7 +107,6 @@ const ImageDescriberMinimal = () => {
     }
   }, []);
 
-
   const handleDataAvailable = useCallback(
     ({ data }) => {
       if (data.size > 0) {
@@ -113,15 +121,15 @@ const ImageDescriberMinimal = () => {
       setError("Location not available. Please try again.");
       return;
     }
-
-    fetch(`http://localhost:3006/create-emergency-event/${username}`, {
+    fetch(`http://localhost:3006/create-emergency-event/${authState.username}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authState.token}`
       },
       body: JSON.stringify({
         location: location,
-        description: '' // We'll leave this empty and let the AI fill it later
+        description: ''
       })
     })
     .then(res => {
@@ -138,14 +146,13 @@ const ImageDescriberMinimal = () => {
       console.error('Error creating initial event:', error);
       setError('Failed to create initial event: ' + error.message);
     });
-  }, [username, location]);
+  }, [authState.username, authState.token, location]);
   
   useEffect(() => {
-    if (location) {
+    if (location && authState.username) {
       createInitialEvent();
     }
-  }, [createInitialEvent, location]);
-
+  }, [createInitialEvent, location, authState.username]);
 
   const handleStartCaptureClick = useCallback(() => {
     setCapturing(true);
@@ -179,9 +186,6 @@ const ImageDescriberMinimal = () => {
     clearInterval(timerRef.current);
   }, []);
 
-
-
-
   const processVideo = useCallback(async () => {
     if (recordedChunks.length && emergencyId) {
       const videoBlob = new Blob(recordedChunks, { type: "video/webm" });
@@ -194,10 +198,11 @@ const ImageDescriberMinimal = () => {
           formData.append('images', frame, `frame${index}.jpg`);
         });
 
-        console.log(`Sending request to: http://localhost:3006/add-emergency-image/${username}/${emergencyId}`);
-
-        const response = await fetch(`http://localhost:3006/add-emergency-image/${username}/${emergencyId}`, {
+        const response = await fetch(`http://localhost:3006/add-emergency-image/${authState.username}/${emergencyId}`, {
           method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${authState.token}`
+          },
           body: formData
         });
 
@@ -215,7 +220,11 @@ const ImageDescriberMinimal = () => {
     } else {
       setError('No video recorded or emergency ID not set');
     }
-  }, [recordedChunks, username, emergencyId]);
+  }, [recordedChunks, authState.username, authState.token, emergencyId]);
+
+  if (!authState.token) {
+    return <div>Please log in to access this page.</div>;
+  }
 
   return (
     <div>
@@ -230,7 +239,7 @@ const ImageDescriberMinimal = () => {
       )}
       <div>Recording Time: {recordingTime}s</div>
       <div>Extracted Frames: {extractedFrames.length}</div>
-      <div>Username: {username}</div>
+      <div>Username: {authState.username}</div>
       <div>Emergency ID: {emergencyId}</div>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         {extractedFrames.map((frame, index) => (
