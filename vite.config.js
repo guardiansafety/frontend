@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000,
+    port: 1234,
     host: true, // Make the server accessible on the network
     middleware: (app) => {
       app.use((req, res, next) => {

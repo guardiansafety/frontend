@@ -22,7 +22,7 @@ const AppContent = () => {
 
   useEffect(() => {
     if (authState.username) {
-      alert(`Logged in as: ${authState.username}`);
+      console.log(`Logged in as: ${authState.username}`);
     }
   }, [authState.username]);
 
